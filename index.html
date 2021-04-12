@@ -3,16 +3,28 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 		<title>Advanced Interactive Bash</title>
-
 		<link rel="stylesheet" href="reveal.js/dist/reset.css">
 		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
 		<link rel="stylesheet" href="reveal.js/dist/theme/night.css" id="theme">
 		<link rel="stylesheet" href="reveal.js/dist/user.css">
-
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="reveal.js/plugin/highlight/monokai.css" id="highlight-theme">
+		<style type="text/css">
+			kbd {
+		background-color: #eee;
+		border-radius: 3px;
+		border: 1px solid #b4b4b4;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+		color: #333;
+		display: inline-block;
+		font-size: .85em;
+		font-weight: 700;
+		line-height: 1;
+		padding: 2px 4px;
+		white-space: nowrap;
+		}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
@@ -23,39 +35,242 @@
 				</section>
 				<section>
 					<section>
-						<h3>Globs and Patterns</h3>
+						<h3>Keyboard shortcuts</h3>
+						<ul>
+							<li class="fragment"> <kbd>TAB</kbd> - Attempt to autocomplete. Press twice for suggestions</li>
+							<li class="fragment"> <kbd>Ctrl</kbd> + <kbd>a</kbd> or <kbd>Home</kbd> - Go to beginning of line</li>
+							<li class="fragment"> <kbd>Ctrl</kbd> + <kbd>e</kbd> or <kbd>End</kbd> - Go to end of line</li>
+						</ul>
 					</section>
 				</section>
 				<section>
 					<section>
-						<h3>Subshells</h3>
+						<h3>Globs aka Filename Expansion</h3>
+						<ul>
+							<li class="fragment"><code class="monokai-red">*&nbsp;&nbsp;</code>: Matches zero or more characters</li>
+							<li class="fragment"><code class="monokai-red">**&nbsp;</code>: Matches zero or more characters <span class="emph">across directory boundaries</span></li>
+							<li class="fragment"><code class="monokai-red">?&nbsp;&nbsp;</code>: Matches any single character</li>
+							<li class="fragment"><code class="monokai-red">[]&nbsp;</code>: Matches a range of characters</li>
+							<li class="fragment"><code class="monokai-red">[^]</code>: Negates the range</li>
+							<li class="fragment"><code class="monokai-red">{glob1,glob2}</code>: Multiple patterns</li>
+						</ul>
 					</section>
+					<section>
+						<h3>Globbing examples</h3>
+						<pre>
+							<code class="bash" data-trim data-noescape>>find</code>
+							<code class="bash" data-trim data-noescape>
+							dirA
+							dirA/subfile1.txt
+							dirB
+							dirB/subfile2.txt
+							fileX.txt
+							scriptX.py
+							Capital.txt
+							</code>
+						</pre>
+					</section>
+					<section>
+						<p><code class="monokai-red">*&nbsp;&nbsp;</code>: Matches zero or more characters</p>
+						<pre>
+							<code class="bash" data-trim data-noescape>
+							dirA
+							dirA/subfile1.txt
+							dirB
+							dirB/subfile2.txt
+							fileX.txt
+							scriptX.py
+							Capital.txt
+							</code>
+							<code class="bash" data-trim data-noescape>>ls *.txt</code>
+							<div class="fragment">
+								<code class="bash" data-trim data-noescape>
+								fileX.txt
+								Capital.txt
+								</code>
+							</div>
+						</pre>
+					</section>
+					<section>
+						<p><code class="monokai-red">**&nbsp;</code>: Matches zero or more characters <span class="emph">across directory boundaries</span></p>
+						<pre>
+							<code class="bash" data-trim data-noescape>
+							dirA
+							dirA/subfile1.txt
+							dirB
+							dirB/subfile2.txt
+							fileX.txt
+							scriptX.py
+							Capital.txt
+							</code>
+							<code class="bash" data-trim data-noescape>>ls **.txt</code>
+							<div class="fragment">
+								<code class="bash" data-trim data-noescape>
+								dirA/subfile1.txt
+								dirB/subfile2.txt
+								fileX.txt
+								Capital.txt
+								</code>
+							</div>
+						</pre>
+					</section>
+					<section>
+						<p><code class="monokai-red">?&nbsp;&nbsp;</code>: Matches any single character</p>
+						<pre>
+							<code class="bash" data-trim data-noescape>
+							dirA
+							dirA/subfile1.txt
+							dirB
+							dirB/subfile2.txt
+							fileX.txt
+							scriptX.py
+							Capital.txt
+							</code>
+							<code class="bash" data-trim data-noescape>>ls file?.txt</code>
+							<div class="fragment">
+								<code class="bash" data-trim data-noescape>
+								fileX.txt
+								</code>
+							</div>
+						</pre>
+					</section>
+					<section>
+						<p><code class="monokai-red">[]&nbsp;</code>: Matches a range of characters</p>
+						<pre>
+							<code class="bash" data-trim data-noescape>
+							dirA
+							dirA/subfile1.txt
+							dirB
+							dirB/subfile2.txt
+							fileX.txt
+							scriptX.py
+							Capital.txt
+							</code>
+							<code class="bash" data-trim data-noescape>>ls [a-f].txt</code>
+						</pre>
+						<div class="fragment">
+							<pre>
+								<code class="bash" data-trim data-noescape>
+								fileX.txt
+								Capital.txt
+								</code>
+							</pre>
+						</div>
+						<p class="fragment"><code class="monokai-red">shopt -s globasciiranges</code> to respect case</p>
+					</section>
+					<section>
+						<p><code class="monokai-red">[^]</code>: Negates the range</p>
+						<pre>
+							<code class="bash" data-trim data-noescape>
+							dirA
+							dirA/subfile1.txt
+							dirB
+							dirB/subfile2.txt
+							fileX.txt
+							scriptX.py
+							Capital.txt
+							</code>
+							<code class="bash" data-trim data-noescape>>ls [^a-f]*</code>
+							<div class="fragment">
+								<code class="bash" data-trim data-noescape>
+								scriptX.py
+								</code>
+							</div>
+						</pre>
+					</section>
+					<section>
+						<p><code class="monokai-red">{glob1,glob2}</code>: Multiple patterns</p>
+						<pre>
+							<code class="bash" data-trim data-noescape>
+							dirA
+							dirA/subfile1.txt
+							dirB
+							dirB/subfile2.txt
+							fileX.txt
+							scriptX.py
+							Capital.txt
+							</code>
+							<code class="bash" data-trim data-noescape>>ls *.{txt,py}</code>
+							<div class="fragment">
+								<code class="bash" data-trim data-noescape>
+								fileX.txt
+								scriptX.py
+								Capital.txt
+								</code>
+							</div>
+						</pre>
+					</section>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h3>Background tasks</h3>
+					<ul>
+						<li class="fragment"><kbd>Ctrl</kbd> + <kbd>z</kbd> - Suspend a running task in the background</li>
+						<li class="fragment"><code class="monokai-red">bg</code> - Start first suspended job in the background</li>
+						<li class="fragment"><code class="monokai-red">fg</code> - Call first suspended job to the foreground</li>
+						<li class="fragment"><code class="monokai-red">jobs</code> - List background jobs</li>
+						<li class="fragment"><code class="monokai-red">long_job.py &</code> - Alt. append an ampersand (&) to execute (immediately start) a task in the background</li>
+					</ul>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h3>SIGHUP and ways to prevent it</h3>
+					<p class="fragment">SIGHUP (signal hangup) happens when a terminal loses connection for any reason. Nowadays the most common is internet issues.</p>
+					<p class="fragment">All processes associated with this terminal will be cancelled.</p>
+					<p class="fragment">There are a number of ways to prevent this</p>
 				</section>
 				<section>
-					<section>
-						<h3>Math</h3>
-					</section>
+					<h3><code class="monokai-red">nohup</code> and <code class="monokai-red">disown</code></h3>
+					<ul>
+						<li class="fragment"> <code class="monokai-red">nohup</code> starts whatever command you type after it independently from your terminal. The command loses interactivity. All output goes to a file called <code>nohup.out</code></li>
+						<li class="fragment"> <code class="monokai-red">disown</code> works similarly, but can be done to already running jobs:
+							<ul>
+								<li><kbd>Ctrl</kbd> + <kbd>z</kbd> to suspend the job in the background</li>
+								<li><code class="monokai-red">bg %1</code> to start the job in the background</li>
+								<li><code class="monokai-red">disown %1</code> to deattach the job from the current terminal</li>
+							</ul>
+						</li>
+					</ul>
 				</section>
-			</div>
+				<section>
+					<h3><code class="monokai-red">screen</code> and <code class="monokai-red">tmux</code></h3>
+					<ul>
+						<li class="fragment"><code class="monokai-red">screen</code> and <code class="monokai-red">tmux</code> are utilities to preserve the terminal server-side.</li>
+						<li class="fragment">You can both disconnect and reconnect to the terminal under <code class="monokai-red">screen</code> or <code class="monokai-red">tmux</code> without affecting the state of the tasks running within them.</li>
+						<li class="fragment"><code class="monokai-red">screen</code> is older but widely available, <code class="monokai-red">tmux</code> is much more modern and feature rich, but you may need to ask for it to be installed</li>
+					</ul>
+				</section>
+				<section>
+					<p>Example <code class="monokai-red">tmux</code> commands</p>
+					<ul>
+						<li class="fragment"><code class="monokai-red">tmux ls</code> - list current sessions</li>
+						<li class="fragment"><code class="monokai-red">tmux new -s s1</code> - Start a new session called "s1"</li>
+						<li class="fragment"><kbd>Ctrl</kbd> + <kbd>b</kbd>, <kbd>d</kbd> - Detach from current session</li>
+						<li class="fragment"><code class="monokai-red">tmux attach -t s1</code> - Attach to session "s1"</li>
+						<li class="fragment"><a href=https://tmuxcheatsheet.com>https://tmuxcheatsheet.com/</a></li>
+					</ul>
+				</section>
+			</section>
 		</div>
-
-		<script src="reveal.js/dist/reveal.js"></script>
-		<script src="reveal.js/plugin/notes/notes.js"></script>
-		<script src="reveal.js/plugin/markdown/markdown.js"></script>
-		<script src="reveal.js/plugin/highlight/highlight.js"></script>
-		<script src="reveal.js/plugin/math/math.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
-				width: 1280,
-				height: 720,
-
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath ]
-			});
-		</script>
-	</body>
+	</div>
+	<script src="reveal.js/dist/reveal.js"></script>
+	<script src="reveal.js/plugin/notes/notes.js"></script>
+	<script src="reveal.js/plugin/markdown/markdown.js"></script>
+	<script src="reveal.js/plugin/highlight/highlight.js"></script>
+	<script src="reveal.js/plugin/math/math.js"></script>
+	<script>
+		// More info about initialization & config:
+		// - https://revealjs.com/initialization/
+		// - https://revealjs.com/config/
+		Reveal.initialize({
+			hash: true,
+			width: 1280,
+			height: 720,
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath ]
+		});
+	</script>
+</body>
 </html>
