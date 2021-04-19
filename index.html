@@ -264,6 +264,21 @@
 						<iframe class="stretch" data-src="https://tmate.io/t/bschiffthaler/public"></iframe>
 					</section>
 				</section>
+				<section>
+					<p>Return codes and command chains</p>
+					<ul>
+						<li class="fragment">Programs return a number from 0-255. Anything non-zero indicates an error</li>
+						<li class="fragment">What that number means is dependent on the program</li>
+						<li class="fragment">The return code of the most recently ran program is stored in the <code class="monokai-red">$?</code> variable</li>
+						<li class="fragment">Multiple commands can be executed conditionally with the <code class="monokai-red">&&</code> and <code class="monokai-red">||</code> operators</li>
+					</ul>
+					<pre><code data-trim data-noescape class="bash">
+					# Run program_x
+					# If program_x succeeds, run program_y
+					# If program_y succeeds, run program_z
+					program_x && program_y || program_z
+					</code></pre>
+				</section>
 			</div>
 		</div>
 		<script src="reveal.js/dist/reveal.js"></script>
